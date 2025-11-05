@@ -1,0 +1,1622 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión de Granjas de Bagre</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen active">
+        <div class="login-container">
+            <div class="login-header">
+                <svg width="64" height="64" viewBox="0 0 32 32" fill="none">
+                    <path d="M16 4C16 4 8 8 4 12C4 16 8 20 16 20C24 20 28 16 28 12C24 8 16 4 16 4Z" fill="#2e8b57"/>
+                    <ellipse cx="16" cy="20" rx="10" ry="6" fill="#1a5c3a"/>
+                    <path d="M12 10 Q12 8 14 8 Q16 8 16 10" stroke="white" stroke-width="0.5" fill="none"/>
+                    <circle cx="13" cy="10" r="0.5" fill="white"/>
+                </svg>
+                <h1>AquaFarm Manager Pro</h1>
+                <p class="login-subtitle">Sistema de Gestión de Granjas de Bagre</p>
+            </div>
+            
+            <!-- Main Login Form -->
+            <div id="mainLoginForm" class="login-section active">
+                <div id="loginErrorMsg" class="login-error" style="display: none;"></div>
+                <form id="loginForm" class="login-form">
+                    <div class="form-group">
+                        <label for="loginEmail">Usuario / Email</label>
+                        <input type="text" id="loginEmail" required placeholder="ejemplo: admin@granja.com" autocomplete="username">
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Contraseña</label>
+                        <input type="password" id="loginPassword" required placeholder="ingresa tu contraseña" autocomplete="current-password">
+                    </div>
+                    <div class="form-group-checkbox">
+                        <input type="checkbox" id="loginRemember">
+                        <label for="loginRemember">Recuérdame</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full-width">INGRESAR</button>
+                </form>
+                
+                <div class="login-actions">
+                    <button class="btn-link" onclick="mostrarRecuperarPassword()">¿Olvidaste la contraseña?</button>
+                    <button class="btn-link" onclick="mostrarCrearCuenta()">Crear Nueva Cuenta</button>
+                </div>
+                
+                <div class="login-divider">O</div>
+                
+                <button class="btn btn-secondary btn-full-width" onclick="ingresoRapidoDemo()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                    </svg>
+                    DEMO RÁPIDA - Ingresa como Admin
+                </button>
+                
+                <div class="login-credenciales">
+                    <p class="credenciales-titulo">Credenciales Disponibles:</p>
+                    <div class="credenciales-grid">
+                        <div class="credencial-item">
+                            <strong>Admin:</strong> admin@granja.com / admin123
+                        </div>
+                        <div class="credencial-item">
+                            <strong>Operador:</strong> operador@granja.com / operador123
+                        </div>
+                        <div class="credencial-item">
+                            <strong>Vendedor:</strong> vendedor@granja.com / vendedor123
+                        </div>
+                        <div class="credencial-item">
+                            <strong>Visor:</strong> visor@granja.com / visor123
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recuperar Password Form -->
+            <div id="recuperarPasswordForm" class="login-section">
+                <h3>Recuperar Contraseña</h3>
+                <p class="login-help-text">Ingresa tu email o usuario para recuperar el acceso</p>
+                <form id="formRecuperar" class="login-form">
+                    <div class="form-group">
+                        <label for="recuperarEmail">Email / Usuario</label>
+                        <input type="text" id="recuperarEmail" required placeholder="tu@email.com">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full-width">Enviar enlace de recuperación</button>
+                    <button type="button" class="btn btn-secondary btn-full-width" onclick="volverALogin()">Volver al login</button>
+                </form>
+            </div>
+            
+            <!-- Crear Cuenta Form -->
+            <div id="crearCuentaForm" class="login-section">
+                <h3>Crear Nueva Cuenta</h3>
+                <form id="formNuevaCuenta" class="login-form">
+                    <div class="form-group">
+                        <label for="nuevoNombre">Nombre Completo*</label>
+                        <input type="text" id="nuevoNombre" required placeholder="Tu nombre completo">
+                    </div>
+                    <div class="form-group">
+                        <label for="nuevoEmail">Email*</label>
+                        <input type="email" id="nuevoEmail" required placeholder="tu@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="nuevoPassword">Contraseña* (mínimo 6 caracteres)</label>
+                        <input type="password" id="nuevoPassword" required minlength="6" placeholder="Mínimo 6 caracteres">
+                    </div>
+                    <div class="form-group">
+                        <label for="nuevoPasswordConfirm">Confirmar Contraseña*</label>
+                        <input type="password" id="nuevoPasswordConfirm" required minlength="6" placeholder="Repite la contraseña">
+                    </div>
+                    <div class="form-group">
+                        <label for="nuevoRol">Seleccionar Rol*</label>
+                        <select id="nuevoRol" required>
+                            <option value="">Selecciona un rol...</option>
+                            <option value="admin">Admin - Acceso total</option>
+                            <option value="operador">Operador - Ingreso de datos</option>
+                            <option value="vendedor">Vendedor - Módulo de ventas</option>
+                            <option value="visor">Visor - Solo lectura</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full-width">Crear Cuenta</button>
+                    <button type="button" class="btn btn-secondary btn-full-width" onclick="volverALogin()">Volver al login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header" style="display: none;">
+        <div class="header-content">
+            <div class="logo">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                    <path d="M16 4C16 4 8 8 4 12C4 16 8 20 16 20C24 20 28 16 28 12C24 8 16 4 16 4Z" fill="#2e8b57"/>
+                    <ellipse cx="16" cy="20" rx="10" ry="6" fill="#1a5c3a"/>
+                </svg>
+                <h1>AquaFarm Manager</h1>
+            </div>
+            <div class="header-actions">
+                <div class="sync-status" id="syncStatus">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                    </svg>
+                    <span id="syncText">Sincronizado</span>
+                </div>
+                <div class="user-info" id="userInfo">
+                    <div class="user-avatar" id="userAvatar">A</div>
+                    <div class="user-details">
+                        <span class="user-name" id="userName">Usuario</span>
+                        <span class="user-role" id="userRole">Admin</span>
+                    </div>
+                </div>
+                <button class="btn-icon" id="notificationBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    </svg>
+                    <span class="badge" id="alertCount">0</span>
+                </button>
+                <button class="btn btn-secondary btn-sm" id="logoutBtn" onclick="cerrarSesion()">Cerrar Sesión</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <nav class="nav-menu">
+                <button class="nav-item active" data-section="dashboard">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                    <span>Dashboard</span>
+                </button>
+                <button class="nav-item" data-section="estanques">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                    </svg>
+                    <span>Estanques</span>
+                </button>
+                <button class="nav-item" data-section="lotes">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                        <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                    </svg>
+                    <span>Lotes</span>
+                </button>
+                <button class="nav-item" data-section="parametros">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M23 6l-9.5 9.5-5-5L1 18"></path>
+                        <path d="M17 6h6v6"></path>
+                    </svg>
+                    <span>Parámetros</span>
+                </button>
+                <button class="nav-item" data-section="alimentacion">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <circle cx="12" cy="12" r="4"></circle>
+                    </svg>
+                    <span>Alimentación</span>
+                </button>
+                <button class="nav-item" data-section="cosechas">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span>Cosechas</span>
+                </button>
+                <button class="nav-item" data-section="reportes">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 20V10M12 20V4M6 20v-6"></path>
+                    </svg>
+                    <span>Reportes</span>
+                </button>
+                <button class="nav-item" data-section="ventas">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 3h18v18H3z"></path>
+                        <path d="M3 9h18M9 21V9"></path>
+                    </svg>
+                    <span>Ventas</span>
+                </button>
+                <button class="nav-item" data-section="colaboradores" id="navColaboradores">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    <span>Colaboradores</span>
+                </button>
+                <button class="nav-item" data-section="configuracion">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"></path>
+                    </svg>
+                    <span>Configuración</span>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="section active">
+                <div class="section-header">
+                    <h2>Dashboard</h2>
+                    <p class="section-subtitle">Resumen general de la operación</p>
+                </div>
+
+                <!-- Summary Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: var(--color-bg-1);">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0066cc" stroke-width="2">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <p class="stat-label">Total Estanques</p>
+                            <p class="stat-value" id="totalEstanques">0</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: var(--color-bg-3);">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2e8b57" stroke-width="2">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                                <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <p class="stat-label">Lotes Activos</p>
+                            <p class="stat-value" id="lotesActivos">0</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: var(--color-bg-6);">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e67e22" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <circle cx="12" cy="12" r="4"></circle>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <p class="stat-label">Consumo Alimento (mes)</p>
+                            <p class="stat-value" id="consumoMes">0 kg</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: var(--color-bg-7);">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <p class="stat-label">Producción Estimada</p>
+                            <p class="stat-value" id="produccionEstimada">0 kg</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alerts Section -->
+                <div id="alertsContainer" class="alerts-container"></div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <h3>Acciones Rápidas</h3>
+                    <div class="quick-actions-grid">
+                        <button class="action-btn" onclick="showSection('parametros')">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 5v14M5 12h14"></path>
+                            </svg>
+                            Registrar Parámetros
+                        </button>
+                        <button class="action-btn" onclick="showSection('alimentacion')">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 5v14M5 12h14"></path>
+                            </svg>
+                            Registrar Alimentación
+                        </button>
+                        <button class="action-btn" onclick="showSection('lotes')">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 5v14M5 12h14"></path>
+                            </svg>
+                            Crear Lote
+                        </button>
+                        <button class="action-btn" onclick="showSection('cosechas')">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 5v14M5 12h14"></path>
+                            </svg>
+                            Registrar Cosecha
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Dashboard Content Grid -->
+                <div class="dashboard-grid">
+                    <!-- Parámetros Recientes -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Última Lectura de Parámetros</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="params-grid">
+                                <div class="param-item">
+                                    <span class="param-label">Temperatura</span>
+                                    <span class="param-value" id="dashTempValue">--°C</span>
+                                    <span class="param-status" id="dashTempStatus"></span>
+                                </div>
+                                <div class="param-item">
+                                    <span class="param-label">Oxígeno</span>
+                                    <span class="param-value" id="dashOxValue">-- mg/L</span>
+                                    <span class="param-status" id="dashOxStatus"></span>
+                                </div>
+                                <div class="param-item">
+                                    <span class="param-label">pH</span>
+                                    <span class="param-value" id="dashPhValue">--</span>
+                                    <span class="param-status" id="dashPhStatus"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Estado de Estanques -->
+                    <div class="card full-width">
+                        <div class="card-header">
+                            <h3>Estado Actual de Estanques</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Estanque</th>
+                                            <th>Área (m²)</th>
+                                            <th>Capacidad</th>
+                                            <th>Lote Actual</th>
+                                            <th>Peces</th>
+                                            <th>Estado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dashboardEstanquesTable"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gráfico Temperatura -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Tendencia de Temperatura (7 días)</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="tempChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gráfico Alimentación -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Consumo de Alimento (7 días)</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="feedChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Estanques Section -->
+            <section id="estanques" class="section">
+                <div class="section-header">
+                    <h2>Gestión de Estanques</h2>
+                    <p class="section-subtitle">Administra los estanques de tu granja</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Agregar Nuevo Estanque</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="formEstanque" class="form-grid">
+                            <div class="form-group">
+                                <label for="estanqueNombre">Nombre del Estanque*</label>
+                                <input type="text" id="estanqueNombre" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="estanqueArea">Área (m²)*</label>
+                                <input type="number" id="estanqueArea" step="0.1" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="estanqueCapacidad">Capacidad de Peces*</label>
+                                <input type="number" id="estanqueCapacidad" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="estanqueProfundidad">Profundidad (m)*</label>
+                                <input type="number" id="estanqueProfundidad" step="0.1" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="estanqueEstado">Estado*</label>
+                                <select id="estanqueEstado" required>
+                                    <option value="activo">Activo</option>
+                                    <option value="mantenimiento">Mantenimiento</option>
+                                    <option value="inactivo">Inactivo</option>
+                                </select>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Guardar Estanque</button>
+                                <button type="button" class="btn btn-secondary" onclick="document.getElementById('formEstanque').reset()">Limpiar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Lista de Estanques</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nombre</th>
+                                        <th>Área (m²)</th>
+                                        <th>Capacidad</th>
+                                        <th>Profundidad (m)</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="estanquesTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Lotes Section -->
+            <section id="lotes" class="section">
+                <div class="section-header">
+                    <h2>Registro de Lotes</h2>
+                    <p class="section-subtitle">Gestiona los lotes de producción</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Crear Nuevo Lote</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="formLote" class="form-grid">
+                            <div class="form-group">
+                                <label for="loteEstanque">Estanque*</label>
+                                <select id="loteEstanque" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="loteFechaSiembra">Fecha de Siembra*</label>
+                                <input type="date" id="loteFechaSiembra" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="loteCantidad">Cantidad Inicial*</label>
+                                <input type="number" id="loteCantidad" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="loteTamano">Tamaño Promedio (cm)*</label>
+                                <input type="number" id="loteTamano" step="0.1" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="lotePeso">Peso Promedio (g)*</label>
+                                <input type="number" id="lotePeso" step="0.1" required>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Guardar Lote</button>
+                                <button type="button" class="btn btn-secondary" onclick="document.getElementById('formLote').reset()">Limpiar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Lotes Activos</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Estanque</th>
+                                        <th>F. Siembra</th>
+                                        <th>Cantidad</th>
+                                        <th>Días Cultivo</th>
+                                        <th>F. Estimada Cosecha</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="lotesActivosTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Lotes Históricos</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Estanque</th>
+                                        <th>F. Siembra</th>
+                                        <th>F. Cosecha</th>
+                                        <th>Cantidad</th>
+                                        <th>Días Cultivo</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="lotesHistoricosTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Parámetros Section -->
+            <section id="parametros" class="section">
+                <div class="section-header">
+                    <h2>Control de Parámetros Ambientales</h2>
+                    <p class="section-subtitle">Monitorea la calidad del agua</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Registrar Parámetros Diarios</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="formParametros" class="form-grid">
+                            <div class="form-group">
+                                <label for="paramEstanque">Estanque*</label>
+                                <select id="paramEstanque" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="paramFecha">Fecha*</label>
+                                <input type="date" id="paramFecha" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="paramTempMin">Temperatura Mínima (°C)*</label>
+                                <input type="number" id="paramTempMin" step="0.1" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="paramTempMax">Temperatura Máxima (°C)*</label>
+                                <input type="number" id="paramTempMax" step="0.1" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="paramOxigeno">Oxígeno Disuelto (mg/L)*</label>
+                                <input type="number" id="paramOxigeno" step="0.1" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="paramPH">pH*</label>
+                                <input type="number" id="paramPH" step="0.1" required>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Guardar Parámetros</button>
+                                <button type="button" class="btn btn-secondary" onclick="document.getElementById('formParametros').reset()">Limpiar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Rangos Recomendados -->
+                <div class="info-panel">
+                    <h4>Rangos Recomendados</h4>
+                    <div class="ranges-grid">
+                        <div class="range-item">
+                            <span class="range-label">Temperatura:</span>
+                            <span class="range-value">26-32°C</span>
+                        </div>
+                        <div class="range-item">
+                            <span class="range-label">Oxígeno:</span>
+                            <span class="range-value">&gt;5 mg/L</span>
+                        </div>
+                        <div class="range-item">
+                            <span class="range-label">pH:</span>
+                            <span class="range-value">6.5-8.5</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gráficos de Tendencias -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Tendencias de Parámetros</h3>
+                        <div class="filter-group">
+                            <select id="paramChartPeriod" class="select-sm">
+                                <option value="7">Últimos 7 días</option>
+                                <option value="14">Últimos 14 días</option>
+                                <option value="30">Últimos 30 días</option>
+                            </select>
+                            <select id="paramChartEstanque" class="select-sm"></select>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="charts-row">
+                            <div class="chart-box">
+                                <h4>Temperatura</h4>
+                                <div class="chart-container">
+                                    <canvas id="temperatureChart"></canvas>
+                                </div>
+                            </div>
+                            <div class="chart-box">
+                                <h4>Oxígeno Disuelto</h4>
+                                <div class="chart-container">
+                                    <canvas id="oxygenChart"></canvas>
+                                </div>
+                            </div>
+                            <div class="chart-box">
+                                <h4>pH</h4>
+                                <div class="chart-container">
+                                    <canvas id="phChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Historial -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Historial de Mediciones</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Estanque</th>
+                                        <th>Temp. Min</th>
+                                        <th>Temp. Max</th>
+                                        <th>Oxígeno</th>
+                                        <th>pH</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="parametrosTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Alimentación Section -->
+            <section id="alimentacion" class="section">
+                <div class="section-header">
+                    <h2>Registro de Alimentación</h2>
+                    <p class="section-subtitle">Controla el consumo de alimento</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Registrar Alimentación</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="formAlimentacion" class="form-grid">
+                            <div class="form-group">
+                                <label for="alimentEstanque">Estanque*</label>
+                                <select id="alimentEstanque" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="alimentFecha">Fecha*</label>
+                                <input type="date" id="alimentFecha" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="alimentTipo">Tipo de Alimento*</label>
+                                <select id="alimentTipo" required>
+                                    <option value="Pellet 3mm">Pellet 3mm</option>
+                                    <option value="Pellet 5mm">Pellet 5mm</option>
+                                    <option value="Pellet 7mm">Pellet 7mm</option>
+                                    <option value="Harina">Harina</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="alimentCantidad">Cantidad (kg)*</label>
+                                <input type="number" id="alimentCantidad" step="0.1" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="alimentCosto">Costo (MXN)*</label>
+                                <input type="number" id="alimentCosto" step="0.01" required>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Guardar Alimentación</button>
+                                <button type="button" class="btn btn-secondary" onclick="document.getElementById('formAlimentacion').reset()">Limpiar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Resumen del Mes -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-content">
+                            <p class="stat-label">Consumo Total del Mes</p>
+                            <p class="stat-value" id="consumoTotalMes">0 kg</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-content">
+                            <p class="stat-label">Costo Total del Mes</p>
+                            <p class="stat-value" id="costoTotalMes">$0 MXN</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-content">
+                            <p class="stat-label">Consumo Promedio Diario</p>
+                            <p class="stat-value" id="consumoPromedioDia">0 kg/día</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gráfico -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Consumo Diario Acumulado</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="consumoChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Historial -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Historial de Alimentación</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Estanque</th>
+                                        <th>Tipo</th>
+                                        <th>Cantidad (kg)</th>
+                                        <th>Costo (MXN)</th>
+                                        <th>Costo/kg</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="alimentacionTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Cosechas Section -->
+            <section id="cosechas" class="section">
+                <div class="section-header">
+                    <h2>Registro de Cosechas</h2>
+                    <p class="section-subtitle">Registra y analiza las cosechas</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Registrar Cosecha</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="formCosecha" class="form-grid">
+                            <div class="form-group">
+                                <label for="cosechaLote">Lote*</label>
+                                <select id="cosechaLote" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="cosechaFecha">Fecha de Cosecha*</label>
+                                <input type="date" id="cosechaFecha" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="cosechaCantidad">Cantidad de Peces*</label>
+                                <input type="number" id="cosechaCantidad" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="cosechaPeso">Peso Total (kg)*</label>
+                                <input type="number" id="cosechaPeso" step="0.1" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="cosechaMortalidad">Mortalidad (peces)</label>
+                                <input type="number" id="cosechaMortalidad" value="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="cosechaPrecio">Precio de Venta (MXN/kg)</label>
+                                <input type="number" id="cosechaPrecio" step="0.01">
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="cosechaObservaciones">Observaciones</label>
+                                <textarea id="cosechaObservaciones" rows="3"></textarea>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Guardar Cosecha</button>
+                                <button type="button" class="btn btn-secondary" onclick="document.getElementById('formCosecha').reset()">Limpiar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Historial de Cosechas -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Historial de Cosechas</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Estanque</th>
+                                        <th>Cantidad</th>
+                                        <th>Peso Total</th>
+                                        <th>Peso Prom.</th>
+                                        <th>Días Cultivo</th>
+                                        <th>Mortalidad</th>
+                                        <th>Ingreso</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cosechasTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Reportes Section -->
+            <section id="reportes" class="section">
+                <div class="section-header">
+                    <h2>Reportes y Análisis</h2>
+                    <p class="section-subtitle">Visualiza el rendimiento de tu granja</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Producción por Estanque</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="produccionChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Análisis de Costos</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="costosChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Rendimiento Comparativo</h3>
+                        <button class="btn btn-secondary" onclick="exportarDatos()">Exportar CSV</button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Estanque</th>
+                                        <th>Lotes</th>
+                                        <th>Producción (kg)</th>
+                                        <th>Consumo Alimento</th>
+                                        <th>Conv. Alimenticia</th>
+                                        <th>Días Prom. Cultivo</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="rendimientoTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Colaboradores Section -->
+            <section id="colaboradores" class="section">
+                <div class="section-header">
+                    <h2>Gestión de Colaboradores</h2>
+                    <p class="section-subtitle">Administra usuarios y permisos</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Agregar Nuevo Colaborador</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="formColaborador" class="form-grid">
+                            <div class="form-group">
+                                <label for="colabNombre">Nombre Completo*</label>
+                                <input type="text" id="colabNombre" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="colabEmail">Email*</label>
+                                <input type="email" id="colabEmail" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="colabPassword">Contraseña*</label>
+                                <input type="password" id="colabPassword" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="colabRol">Rol*</label>
+                                <select id="colabRol" required>
+                                    <option value="admin">Admin - Acceso total</option>
+                                    <option value="operador">Operador - Ingreso de datos</option>
+                                    <option value="visor">Visor - Solo lectura</option>
+                                </select>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Agregar Colaborador</button>
+                                <button type="button" class="btn btn-secondary" onclick="document.getElementById('formColaborador').reset()">Limpiar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Colaboradores Activos</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Email</th>
+                                        <th>Rol</th>
+                                        <th>Estado</th>
+                                        <th>Último Acceso</th>
+                                        <th>Registros</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="colaboradoresTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Estadísticas de Colaboración</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-content">
+                                    <p class="stat-label">Total Colaboradores</p>
+                                    <p class="stat-value" id="totalColaboradores">0</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-content">
+                                    <p class="stat-label">Activos Hoy</p>
+                                    <p class="stat-value" id="colaboradoresHoy">0</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-content">
+                                    <p class="stat-label">Registros del Mes</p>
+                                    <p class="stat-value" id="registrosMes">0</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-panel">
+                    <h4>Permisos por Rol</h4>
+                    <div class="roles-info">
+                        <div class="role-card">
+                            <h5>👑 Admin</h5>
+                            <ul>
+                                <li>Acceso total a todas las secciones</li>
+                                <li>Gestión de colaboradores</li>
+                                <li>Ver datos de todos los usuarios</li>
+                                <li>Exportar y resetear datos</li>
+                            </ul>
+                        </div>
+                        <div class="role-card">
+                            <h5>⚙️ Operador</h5>
+                            <ul>
+                                <li>Ingreso de datos (parámetros, alimentación, muestreos)</li>
+                                <li>Ver solo sus propios registros</li>
+                                <li>Editar sus propios registros</li>
+                                <li>Acceso a reportes personales</li>
+                            </ul>
+                        </div>
+                        <div class="role-card">
+                            <h5>👁️ Visor</h5>
+                            <ul>
+                                <li>Solo lectura de datos</li>
+                                <li>Ver reportes y análisis</li>
+                                <li>No puede crear ni editar registros</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Ventas Section -->
+            <section id="ventas" class="section">
+                <div class="section-header">
+                    <h2>Módulo de Ventas</h2>
+                    <p class="section-subtitle">Gestiona clientes, ventas y facturación</p>
+                </div>
+
+                <!-- Dashboard de Ventas -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Dashboard de Ventas del Mes</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-icon" style="background: var(--color-bg-3);">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2">
+                                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                    </svg>
+                                </div>
+                                <div class="stat-content">
+                                    <p class="stat-label">Ingresos Totales</p>
+                                    <p class="stat-value" id="ventasIngresosMes">$0</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon" style="background: var(--color-bg-1);">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0066cc" stroke-width="2">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="12" cy="7" r="4"></circle>
+                                    </svg>
+                                </div>
+                                <div class="stat-content">
+                                    <p class="stat-label">Total Ventas</p>
+                                    <p class="stat-value" id="ventasTotalMes">0</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon" style="background: var(--color-bg-2);">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffc107" stroke-width="2">
+                                        <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        <path d="M9 12l2 2 4-4"></path>
+                                    </svg>
+                                </div>
+                                <div class="stat-content">
+                                    <p class="stat-label">Ganancia Neta</p>
+                                    <p class="stat-value" id="ventasGananciaMes">$0</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon" style="background: var(--color-bg-5);">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9333ea" stroke-width="2">
+                                        <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path>
+                                        <circle cx="8.5" cy="7" r="4"></circle>
+                                        <path d="M20 8v6M23 11h-6"></path>
+                                    </svg>
+                                </div>
+                                <div class="stat-content">
+                                    <p class="stat-label">Margen Promedio</p>
+                                    <p class="stat-value" id="ventasMargenProm">0%</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subsecciones Tabs -->
+                <div class="ventas-tabs">
+                    <button class="ventas-tab active" data-ventas-tab="clientes">Gestión de Clientes</button>
+                    <button class="ventas-tab" data-ventas-tab="registrar">Registrar Venta</button>
+                    <button class="ventas-tab" data-ventas-tab="historial">Historial de Ventas</button>
+                    <button class="ventas-tab" data-ventas-tab="cobros">Cobros y Pagos</button>
+                    <button class="ventas-tab" data-ventas-tab="reportes">Reportes de Ventas</button>
+                </div>
+
+                <!-- Gestión de Clientes -->
+                <div id="ventasClientes" class="ventas-subsection active">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Agregar Nuevo Cliente</h3>
+                        </div>
+                        <div class="card-body">
+                            <form id="formCliente" class="form-grid">
+                                <div class="form-group">
+                                    <label for="clienteNombre">Nombre del Cliente*</label>
+                                    <input type="text" id="clienteNombre" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="clienteTelefono">Teléfono*</label>
+                                    <input type="tel" id="clienteTelefono" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="clienteEmail">Email</label>
+                                    <input type="email" id="clienteEmail">
+                                </div>
+                                <div class="form-group">
+                                    <label for="clienteDireccion">Dirección</label>
+                                    <input type="text" id="clienteDireccion">
+                                </div>
+                                <div class="form-group">
+                                    <label for="clienteTipo">Tipo de Cliente*</label>
+                                    <select id="clienteTipo" required>
+                                        <option value="mayorista">Mayorista</option>
+                                        <option value="minorista">Minorista</option>
+                                    </select>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary">Agregar Cliente</button>
+                                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('formCliente').reset()">Limpiar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Lista de Clientes</h3>
+                            <input type="text" id="buscarCliente" placeholder="Buscar cliente..." class="search-input">
+                        </div>
+                        <div class="card-body">
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Nombre</th>
+                                            <th>Teléfono</th>
+                                            <th>Email</th>
+                                            <th>Tipo</th>
+                                            <th>Última Compra</th>
+                                            <th>Total Compras</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="clientesTable"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Registrar Venta -->
+                <div id="ventasRegistrar" class="ventas-subsection">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Registrar Nueva Venta</h3>
+                        </div>
+                        <div class="card-body">
+                            <form id="formVenta" class="form-grid">
+                                <div class="form-group">
+                                    <label for="ventaFecha">Fecha de Venta*</label>
+                                    <input type="date" id="ventaFecha" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ventaCliente">Cliente*</label>
+                                    <select id="ventaCliente" required></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ventaEstanque">Estanque/Lote Origen*</label>
+                                    <select id="ventaEstanque" required></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ventaCantidadKg">Cantidad (kg)*</label>
+                                    <input type="number" id="ventaCantidadKg" step="0.1" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ventaPrecioUnitario">Precio por kg (MXN)*</label>
+                                    <input type="number" id="ventaPrecioUnitario" step="0.01" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ventaDescuento">Descuento (%)</label>
+                                    <input type="number" id="ventaDescuento" step="0.1" value="0" min="0" max="100">
+                                </div>
+                                <div class="form-group">
+                                    <label for="ventaMetodoPago">Método de Pago*</label>
+                                    <select id="ventaMetodoPago" required>
+                                        <option value="Efectivo">Efectivo</option>
+                                        <option value="Transferencia bancaria">Transferencia bancaria</option>
+                                        <option value="Tarjeta débito">Tarjeta débito</option>
+                                        <option value="Tarjeta crédito">Tarjeta crédito</option>
+                                        <option value="Cheque">Cheque</option>
+                                        <option value="Crédito">Crédito</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" id="ventaFechaVencimientoGroup" style="display: none;">
+                                    <label for="ventaFechaVencimiento">Fecha de Vencimiento</label>
+                                    <input type="date" id="ventaFechaVencimiento">
+                                </div>
+                                <div class="form-group full-width">
+                                    <label for="ventaObservaciones">Observaciones</label>
+                                    <textarea id="ventaObservaciones" rows="2"></textarea>
+                                </div>
+                                <div class="form-group full-width">
+                                    <div class="venta-resumen">
+                                        <h4>Resumen de Venta</h4>
+                                        <div class="resumen-grid">
+                                            <div class="resumen-item">
+                                                <span>Subtotal:</span>
+                                                <strong id="ventaSubtotal">$0.00</strong>
+                                            </div>
+                                            <div class="resumen-item">
+                                                <span>IVA (16%):</span>
+                                                <strong id="ventaIVA">$0.00</strong>
+                                            </div>
+                                            <div class="resumen-item">
+                                                <span>Total:</span>
+                                                <strong id="ventaTotal" style="color: var(--color-primary); font-size: 1.2em;">$0.00</strong>
+                                            </div>
+                                            <div class="resumen-item">
+                                                <span>Costo Producción:</span>
+                                                <strong id="ventaCostoProduccion">$0.00</strong>
+                                            </div>
+                                            <div class="resumen-item">
+                                                <span>Ganancia Neta:</span>
+                                                <strong id="ventaGananciaNeta" style="color: var(--success-color);">$0.00</strong>
+                                            </div>
+                                            <div class="resumen-item">
+                                                <span>Margen (%):</span>
+                                                <strong id="ventaMargen" style="color: var(--success-color);">0%</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary">Guardar Venta</button>
+                                    <button type="button" class="btn btn-secondary" onclick="limpiarFormVenta()">Limpiar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Historial de Ventas -->
+                <div id="ventasHistorial" class="ventas-subsection">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Historial de Ventas</h3>
+                            <div class="filter-group">
+                                <select id="filtroMesVentas" class="select-sm">
+                                    <option value="actual">Mes Actual</option>
+                                    <option value="anterior">Mes Anterior</option>
+                                    <option value="todos">Todas</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Factura #</th>
+                                            <th>Fecha</th>
+                                            <th>Cliente</th>
+                                            <th>Cantidad (kg)</th>
+                                            <th>Precio/kg</th>
+                                            <th>Total</th>
+                                            <th>Método Pago</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="ventasHistorialTable"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cobros y Pagos -->
+                <div id="ventasCobros" class="ventas-subsection">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-content">
+                                <p class="stat-label">Cuentas por Cobrar</p>
+                                <p class="stat-value" id="totalPorCobrar">$0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-content">
+                                <p class="stat-label">Vencidas</p>
+                                <p class="stat-value" style="color: var(--danger-color);" id="totalVencidas">$0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-content">
+                                <p class="stat-label">Cobrado este Mes</p>
+                                <p class="stat-value" style="color: var(--success-color);" id="totalCobradoMes">$0</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Ventas Pendientes de Pago</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Factura #</th>
+                                            <th>Cliente</th>
+                                            <th>Fecha Venta</th>
+                                            <th>Vencimiento</th>
+                                            <th>Total</th>
+                                            <th>Días Vencido</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="ventasPendientesTable"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Historial de Pagos</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Fecha Pago</th>
+                                            <th>Factura #</th>
+                                            <th>Cliente</th>
+                                            <th>Monto</th>
+                                            <th>Método</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="historialPagosTable"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reportes de Ventas -->
+                <div id="ventasReportes" class="ventas-subsection">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Análisis de Ventas - Últimos 30 Días</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="ventasPorDiaChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-grid">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Ingresos vs Costos vs Ganancia</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="ingresosVsCostosChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Ventas por Método de Pago</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="metodosPagoChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Top 5 Clientes por Volumen</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Cliente</th>
+                                            <th>Total Compras (kg)</th>
+                                            <th>Ingresos Generados</th>
+                                            <th>Ticket Promedio</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="topClientesTable"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Rentabilidad por Estanque</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Estanque</th>
+                                            <th>Total Vendido (kg)</th>
+                                            <th>Ingresos</th>
+                                            <th>Costos Producción</th>
+                                            <th>Ganancia</th>
+                                            <th>Margen %</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="rentabilidadEstanquesTable"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Configuración Section -->
+            <section id="configuracion" class="section">
+                <div class="section-header">
+                    <h2>Configuración</h2>
+                    <p class="section-subtitle">Configura los parámetros del sistema</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Rangos de Parámetros Óptimos</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="formConfig" class="form-grid">
+                            <div class="form-group">
+                                <label for="configTempMin">Temperatura Mínima (°C)</label>
+                                <input type="number" id="configTempMin" value="26" step="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label for="configTempMax">Temperatura Máxima (°C)</label>
+                                <input type="number" id="configTempMax" value="32" step="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label for="configOxMin">Oxígeno Mínimo (mg/L)</label>
+                                <input type="number" id="configOxMin" value="5" step="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label for="configPhMin">pH Mínimo</label>
+                                <input type="number" id="configPhMin" value="6.5" step="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label for="configPhMax">pH Máximo</label>
+                                <input type="number" id="configPhMax" value="8.5" step="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label for="configMoneda">Moneda</label>
+                                <select id="configMoneda">
+                                    <option value="MXN" selected>MXN - Peso Mexicano</option>
+                                    <option value="USD">USD - Dólar</option>
+                                </select>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Guardar Configuración</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Respaldo de Datos</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Los datos de la sesión actual se almacenan en memoria. Para conservar los datos entre sesiones, exporta la información usando la función de Reportes.</p>
+                        <div class="button-group">
+                            <button class="btn btn-primary" onclick="exportarDatos()">Exportar Datos</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-reset">
+                    <div class="card-header">
+                        <h3>Zona de Peligro</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="reset-section">
+                            <div class="reset-info">
+                                <h4>Reiniciar Aplicación</h4>
+                                <p>Esta acción eliminará permanentemente todos los registros de estanques, lotes, parámetros, alimentación y cosechas. Los datos no podrán ser recuperados.</p>
+                                <p class="text-muted"><strong>Recomendación:</strong> Exporte sus datos antes de realizar esta acción.</p>
+                            </div>
+                            <button class="btn btn-reset" onclick="mostrarModalReset()">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 6h18"></path>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                                </svg>
+                                RESET - Eliminar Todos los Datos
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 AquaFarm Manager | Sistema Profesional de Gestión de Granjas de Bagre | v1.0</p>
+    </footer>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Reset Confirmation Modal -->
+    <div id="resetModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#dc3545" stroke-width="2">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                <h2>¿Está seguro de que desea ELIMINAR todos los registros?</h2>
+            </div>
+            <div class="modal-body">
+                <p>Esta acción no se puede deshacer. Se eliminarán permanentemente:</p>
+                <ul class="modal-list">
+                    <li>Todos los estanques registrados</li>
+                    <li>Todos los lotes activos e históricos</li>
+                    <li>Todos los registros de parámetros ambientales</li>
+                    <li>Todos los registros de alimentación</li>
+                    <li>Todos los registros de cosechas</li>
+                </ul>
+                <div class="modal-warning">
+                    <strong>⚠️ Advertencia:</strong> Los datos no podrán ser recuperados después de esta operación.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="cerrarModalReset()">Cancelar</button>
+                <button class="btn btn-danger" onclick="confirmarReset()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                    Sí, eliminar todo
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
